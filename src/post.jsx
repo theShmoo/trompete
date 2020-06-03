@@ -19,31 +19,52 @@ const styles = theme => ({
   },
   box: {
     margin: theme.spacing(1),
-    padding: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+  },
+  comments: {
+    marginRight: theme.spacing(4),
   }
 });
 
-const Ago = (props) => {
-  return <Grid item xs={12}>
+const Ago = ({ time }) => {
+  return <Box flexGrow={1} >
     <Typography variant="caption" color="inherit">
-      <TimeAgo date={props.time} formatter={formatter} />
+      <TimeAgo date={time} formatter={formatter} />
     </Typography>
-  </Grid>
+  </Box>
+}
+
+const CommentHint = ({ comments }) => {
+  return <Box>
+    <Typography variant="caption" color="inherit">
+      0 Kommentare
+    </Typography>
+  </Box>
 }
 
 const Post = (props) => {
   const { id, post, user, classes } = props;
-  const { text, time } = post;
+  const { text, time, comments } = post;
 
   return <Grid item xs={12} sm={6} lg={4} className={classes.root}>
     <Paper square elevation={2} className={classes.box}>
       <Box display="flex" >
-        <Typography variant="h6" color="inherit">
-          {text}
-        </Typography>
-        <Vote post={post} id={id} user={user} />
+        <Box flexGrow={1} >
+          <Typography variant="h6" color="inherit">
+            {text}
+          </Typography>
+        </Box>
+        <Box>
+          <Vote post={post} id={id} user={user} />
+        </Box>
       </Box>
-      <Ago time={time} />
+      <Box display="flex" className={classes.comments}>
+        <Ago time={time} />
+        <CommentHint post={comments} />
+      </Box>
     </Paper>
   </Grid>
 };

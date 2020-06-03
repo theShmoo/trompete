@@ -14,7 +14,6 @@ import { VoteSum } from './utils';
 
 const styles = theme => ({
   root: {
-    marginLeft: 'auto',
     paddingLeft: theme.spacing(1)
   },
   icon: {
