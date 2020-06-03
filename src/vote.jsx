@@ -1,18 +1,34 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 import { PostsBase, PostHeaderOptions } from './endpoints';
+import { VoteSum } from './utils';
 
 
 const styles = theme => ({
   root: {
     marginLeft: 'auto',
   },
+  icon: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  votes: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 const Votes = (props) => {
@@ -112,14 +128,39 @@ const Votes = (props) => {
   }
   let upcolor = "inherit";
   let downcolor = "inherit";
+  let voteSum = VoteSum(votes);
   if (vote) {
-    upcolor = vote.data.up ? "primary" : "inherit";
-    downcolor = !vote.data.up ? "primary" : "inherit";
+    const { up } = vote.data;
+    upcolor = up ? "primary" : "inherit";
+    downcolor = !up ? "primary" : "inherit";
+    // correct the voting by the local state
+    if (foundVote && foundVote.data.up !== up) {
+      voteSum += up ? 2 : -2;
+    }
   }
 
   return <div className={classes.root}>
-    <IconButton aria-label="upvote" size="small" color={upcolor} onClick={handleUpVote}><ArrowUpwardIcon /></IconButton>
-    <IconButton aria-label="downvote" size="small" color={downcolor} onClick={handleDownVote}><ArrowDownwardIcon /></IconButton>
+    <Avatar className={classes.icon}>
+      <Typography variant="caption" className={classes.votes}>
+        {voteSum}
+      </Typography>
+    </Avatar>
+    <IconButton
+      className={classes.icon}
+      aria-label="upvote"
+      size="small"
+      color={upcolor}
+      onClick={handleUpVote}>
+      <ArrowUpwardIcon />
+    </IconButton>
+    <IconButton
+      className={classes.icon}
+      aria-label="downvote"
+      size="small"
+      color={downcolor}
+      onClick={handleDownVote}>
+      <ArrowDownwardIcon />
+    </IconButton>
   </div>
 };
 

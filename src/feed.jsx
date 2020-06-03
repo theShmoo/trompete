@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import Post from './post';
+import OrderingForm from './orderingForm';
 import { PostsURL, GetRequestOptions } from './endpoints';
+import { VoteSum } from './utils';
 
 const styles = theme => ({
   root: {
@@ -12,10 +14,16 @@ const styles = theme => ({
   },
 });
 
+const possibleOrderings = [
+  { name: "Neueste", value: "newest" },
+  { name: "Hottest", value: "hottest" },
+]
+
 class Feed extends React.Component {
   state = {
     data: {},
-    error: ""
+    error: "",
+    ordering: possibleOrderings[0]
   }
 
   setData(data) {
@@ -32,6 +40,10 @@ class Feed extends React.Component {
     }
   }
 
+  handleOrderChange = (ordering) => {
+    this.setState({ ordering: ordering });
+  }
+
   update() {
     // const { user } = this.props;
     fetch(PostsURL, GetRequestOptions).then(response => response.json())
@@ -42,13 +54,31 @@ class Feed extends React.Component {
 
   render() {
     const { user, classes } = this.props;
-    const PostTexts = Object.entries(this.state.data).map(
-      ([k, v], i) => {
-        return <Post id={k} post={v} user={user} onVote={this.handleVote} key={i} />
-      });
+    const { data, ordering } = this.state;
+    const { value } = ordering;
+    const FlatPosts = Object.entries(data).map(([k, v]) => { return { id: k, data: v }; });
+    const SortedPosts = FlatPosts.sort((lhs, rhs) => {
+      if (value === "newest") {
+        return rhs.data.time - lhs.data.time;
+      }
+      else if (value === "hottest") {
+        const lvotes = VoteSum(lhs.data.votes);
+        const rvotes = VoteSum(rhs.data.votes);
+        const score = rvotes - lvotes;
+        return score;
+      }
+      else {
+        return 0;
+      }
+    }).map((post, i) => {
+      return <Post id={post.id} post={post.data} user={user} key={i} />
+    });
 
-    return <Grid className={classes.root} container spacing={2}>
-      {PostTexts}
+    return <Grid className={classes.root} container spacing={1}>
+      <Grid item xs={12}>
+        <OrderingForm ordering={ordering} orderings={possibleOrderings} onChange={this.handleOrderChange} />
+      </Grid>
+      {SortedPosts}
     </Grid>
   }
 };
