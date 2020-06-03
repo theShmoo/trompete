@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
+import CommentIcon from '@material-ui/icons/Comment';
+import Button from '@material-ui/core/Button';
 import TimeAgo from 'react-timeago'
 import germanStrings from 'react-timeago/lib/language-strings/de'
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
@@ -25,12 +27,12 @@ const styles = theme => ({
     paddingBottom: theme.spacing(1),
   },
   comments: {
-    marginRight: theme.spacing(4),
+    marginRight: theme.spacing(0),
   }
 });
 
 const Ago = ({ time }) => {
-  return <Box flexGrow={1} >
+  return <Box alignSelf="flex-end">
     <Typography variant="caption" color="inherit">
       <TimeAgo date={time} formatter={formatter} />
     </Typography>
@@ -38,11 +40,16 @@ const Ago = ({ time }) => {
 }
 
 const CommentHint = ({ comments }) => {
-  return <Box>
-    <Typography variant="caption" color="inherit">
-      0 Kommentare
-    </Typography>
-  </Box>
+  const num = comments ? comments.length : 0;
+  return <Box flexGrow={1} >
+    <Button
+      variant="text"
+      size="small"
+      color="secondary"
+      startIcon={<CommentIcon />}
+    >
+      {num} Kommentare
+  </Button></Box>
 }
 
 const Post = (props) => {
@@ -62,8 +69,8 @@ const Post = (props) => {
         </Box>
       </Box>
       <Box display="flex" className={classes.comments}>
-        <Ago time={time} />
         <CommentHint post={comments} />
+        <Ago time={time} />
       </Box>
     </Paper>
   </Grid>
