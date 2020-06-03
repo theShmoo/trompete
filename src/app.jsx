@@ -39,13 +39,13 @@ class App extends Component {
   render() {
     const { classes } = this.props;
 
-    const handleSend = () => { this.setState(prevState => { return { refreshFeed: !prevState.refreshFeed } }); };
+    const handleSend = (id, data) => { this.setState(prevState => { return { refreshFeed: !prevState.refreshFeed } }); };
 
     return <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
           <TrompeteIcon />
-          <Typography variant="h6" color="inherit" className={classes.flex}>
+          <Typography variant="h5" color="inherit" className={classes.flex}>
             Trompete
           </Typography>
         </Toolbar>

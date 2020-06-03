@@ -32,7 +32,7 @@ const styles = theme => ({
 });
 
 const Votes = (props) => {
-  const { id, post, user, classes } = props;
+  const { id, post, user, parent, classes } = props;
   const { votes } = post;
   const flatVotes = votes ? Object.entries(votes).map(
     ([k, v]) => { return { id: k, data: v } }) : undefined;
@@ -40,7 +40,9 @@ const Votes = (props) => {
 
   const [vote, setVote] = React.useState(foundVote);
 
-  const votesBase = PostsBase + '/' + id + '/votes';
+  const votesBase = parent ?
+    PostsBase + '/' + parent + '/comments/' + id + '/votes' :
+    PostsBase + '/' + id + '/votes';
 
 
   const initialVote = (data, up) => {

@@ -56,23 +56,27 @@ class Feed extends React.Component {
     const { user, classes } = this.props;
     const { data, ordering } = this.state;
     const { value } = ordering;
-    const FlatPosts = Object.entries(data).map(([k, v]) => { return { id: k, data: v }; });
-    const SortedPosts = FlatPosts.sort((lhs, rhs) => {
-      if (value === "newest") {
-        return rhs.data.time - lhs.data.time;
-      }
-      else if (value === "hottest") {
-        const lvotes = VoteSum(lhs.data.votes);
-        const rvotes = VoteSum(rhs.data.votes);
-        const score = rvotes - lvotes;
-        return score;
-      }
-      else {
-        return 0;
-      }
-    }).map((post, i) => {
-      return <Post id={post.id} post={post.data} user={user} key={post.id} />
-    });
+    const SortedPosts = Object.entries(data).map(([k, v]) => {
+      return { id: k, data: v };
+    })
+      .filter((post => post.data.comment !== true))
+      .sort((lhs, rhs) => {
+        if (value === "newest") {
+          return rhs.data.time - lhs.data.time;
+        }
+        else if (value === "hottest") {
+          const lvotes = VoteSum(lhs.data.votes);
+          const rvotes = VoteSum(rhs.data.votes);
+          const score = rvotes - lvotes;
+          return score;
+        }
+        else {
+          return 0;
+        }
+      })
+      .map((post, i) => {
+        return <Post id={post.id} post={post.data} user={user} key={post.id} />
+      });
 
     return <Grid className={classes.root} container spacing={1}>
       <Grid item xs={12}>

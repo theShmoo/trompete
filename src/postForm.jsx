@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import SendIcon from '@material-ui/icons/Send';
 import DoneIcon from '@material-ui/icons/Done';
 
-import { PostsURL, PostHeaderOptions } from './endpoints';
+import { PostsURL, PostsBase, PostHeaderOptions } from './endpoints';
 
 const styles = theme => ({
   form: {
@@ -24,36 +24,37 @@ const styles = theme => ({
 });
 
 const PostForm = (props) => {
-  const { classes, user, onSend } = props;
+  const { classes, user, onSend, postid } = props;
   const [text, setText] = React.useState('');
   const [done, setDone] = React.useState(false);
   const [error, setError] = React.useState("Leere Trompete");
   const hasError = error !== ""
 
-  const wrappedOnSend = () => {
-    onSend();
+  const wrappedOnSend = (id, data) => {
+    onSend(id, data);
   };
 
   const handleSend = () => {
     if (hasError) return;
-
+    const url = postid ? PostsBase + "/" + postid + "/comments.json" : PostsURL;
+    const data = {
+      'user': user,
+      'text': text,
+      'time': Date.now()
+    };
     const msg = {
       method: 'POST',
       headers: PostHeaderOptions,
-      body: JSON.stringify({
-        'user': user,
-        'text': text,
-        'time': Date.now()
-      }),
+      body: JSON.stringify(data),
       redirect: 'follow'
     };
-    fetch(PostsURL, msg)
+    fetch(url, msg)
       .then((response) => {
         if (response.ok) {
           response.json().then((json) => {
             setDone(true);
             setText("");
-            wrappedOnSend();
+            wrappedOnSend(json.name, data);
           }).catch(() => {
             setError("Fehler beim Verarbeiten der Nachricht...");
           });
@@ -101,10 +102,14 @@ const PostForm = (props) => {
       className={classes.button}
       color={done ? "secondary" : "primary"}
       endIcon={done ? <DoneIcon /> : <SendIcon />}>
-      Send
-          </Button>
+      {postid ? "Antworten" : "Trompete!"}
+    </Button>
     {done ? <Typography variant="body1" color="primary">Gesendet!</Typography> : ""}
   </form>
 };
 
 export default withStyles(styles)(PostForm);
+
+PostForm.defaultProps = {
+  comment: false,
+}
