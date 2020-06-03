@@ -71,7 +71,7 @@ class Feed extends React.Component {
         return 0;
       }
     }).map((post, i) => {
-      return <Post id={post.id} post={post.data} user={user} key={i} />
+      return <Post id={post.id} post={post.data} user={user} key={post.id} />
     });
 
     return <Grid className={classes.root} container spacing={1}>

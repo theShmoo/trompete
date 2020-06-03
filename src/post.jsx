@@ -24,7 +24,7 @@ const styles = theme => ({
 });
 
 const Ago = (props) => {
-  return <Grid xs={12}>
+  return <Grid item xs={12}>
     <Typography variant="caption" color="inherit">
       <TimeAgo date={props.time} formatter={formatter} />
     </Typography>

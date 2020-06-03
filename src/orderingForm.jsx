@@ -19,8 +19,8 @@ const OrderingForm = (props) => {
   const { classes, onChange, ordering, orderings } = props;
   const { value } = ordering;
 
-  const menus = orderings.map(o => {
-    return <MenuItem value={o.value}>{o.name}</MenuItem>
+  const menus = orderings.map((o, i) => {
+    return <MenuItem value={o.value} key={i}>{o.name}</MenuItem>
   });
 
   const handleChange = (event) => {
