@@ -52,6 +52,7 @@ const PostForm = (props) => {
         if (response.ok) {
           response.json().then((json) => {
             setDone(true);
+            setText("");
             wrappedOnSend();
           }).catch(() => {
             setError("Fehler beim Verarbeiten der Nachricht...");
@@ -69,6 +70,9 @@ const PostForm = (props) => {
   };
 
   const handleChange = (event) => {
+    if (done) {
+      setDone(false);
+    }
     setText(event.target.value);
     setError(event.target.value ? "" : "Leere Trompete");
   };
@@ -99,7 +103,7 @@ const PostForm = (props) => {
       endIcon={done ? <DoneIcon /> : <SendIcon />}>
       Send
           </Button>
-    {done ? <Typography variant="body1" color="primary">Danke!</Typography> : ""}
+    {done ? <Typography variant="body1" color="primary">Gesendet!</Typography> : ""}
   </form>
 };
 
