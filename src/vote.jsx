@@ -5,8 +5,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import { PostsBase, PostHeaderOptions } from './endpoints';
 import { VoteSum } from './utils';
@@ -121,8 +121,8 @@ const Votes = (props) => {
   let voteSum = VoteSum(votes);
   if (vote) {
     const { up } = vote.data;
-    upcolor = up ? "primary" : "secondary";
-    downcolor = !up ? "primary" : "secondary";
+    upcolor = up ? "secondary" : "inherit";
+    downcolor = !up ? "primary" : "inherit";
     // correct the voting by the local state
     if (foundVote) {
       if (foundVote.data.up !== up) {
@@ -146,7 +146,7 @@ const Votes = (props) => {
         size="small"
         color={upcolor}
         onClick={handleUpVote}>
-        <ArrowUpwardIcon fontSize="inherit" />
+        <KeyboardArrowUpIcon fontSize="inherit" />
       </IconButton>
       <Box
         display="flex"
@@ -160,7 +160,7 @@ const Votes = (props) => {
         size="small"
         color={downcolor}
         onClick={handleDownVote}>
-        <ArrowDownwardIcon fontSize="inherit" />
+        <KeyboardArrowDownIcon fontSize="inherit" />
       </IconButton>
     </Typography>
   </Box>
