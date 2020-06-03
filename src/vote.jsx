@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
@@ -17,17 +17,9 @@ const styles = theme => ({
     paddingLeft: theme.spacing(1)
   },
   icon: {
-    width: theme.spacing(3),
-    height: theme.spacing(3),
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    padding: 0
   },
   votes: {
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
   }
 });
 
@@ -129,8 +121,8 @@ const Votes = (props) => {
   let voteSum = VoteSum(votes);
   if (vote) {
     const { up } = vote.data;
-    upcolor = up ? "primary" : "inherit";
-    downcolor = !up ? "primary" : "inherit";
+    upcolor = up ? "primary" : "secondary";
+    downcolor = !up ? "primary" : "secondary";
     // correct the voting by the local state
     if (foundVote) {
       if (foundVote.data.up !== up) {
@@ -142,29 +134,36 @@ const Votes = (props) => {
     }
   }
 
-  return <div className={classes.root}>
-    <Avatar className={classes.icon}>
-      <Typography variant="caption" className={classes.votes}>
+  return <Box
+    flexDirection="column"
+    display="flex"
+    alignItems="center"
+    className={classes.root}>
+    <Typography variant="caption" className={classes.votes}>
+      <IconButton
+        className={classes.icon}
+        aria-label="upvote"
+        size="small"
+        color={upcolor}
+        onClick={handleUpVote}>
+        <ArrowUpwardIcon fontSize="inherit" />
+      </IconButton>
+      <Box
+        display="flex"
+        justifyContent="center"
+        className={classes.icon}>
         {voteSum}
-      </Typography>
-    </Avatar>
-    <IconButton
-      className={classes.icon}
-      aria-label="upvote"
-      size="small"
-      color={upcolor}
-      onClick={handleUpVote}>
-      <ArrowUpwardIcon />
-    </IconButton>
-    <IconButton
-      className={classes.icon}
-      aria-label="downvote"
-      size="small"
-      color={downcolor}
-      onClick={handleDownVote}>
-      <ArrowDownwardIcon />
-    </IconButton>
-  </div>
+      </Box>
+      <IconButton
+        className={classes.icon}
+        aria-label="downvote"
+        size="small"
+        color={downcolor}
+        onClick={handleDownVote}>
+        <ArrowDownwardIcon fontSize="inherit" />
+      </IconButton>
+    </Typography>
+  </Box>
 };
 
 export default withStyles(styles)(Votes);

@@ -19,7 +19,7 @@ const styles = theme => ({
   },
   textField: {
     flexGrow: 1,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 });
 

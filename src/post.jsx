@@ -54,7 +54,7 @@ const Post = (props) => {
 
   const handleShowComments = (event) => setShowComments(!showComments);
 
-  return <Grid item xs={12} sm={6} lg={4} className={classes.root}>
+  return <Grid item xs={12} className={classes.root}>
     <Paper square elevation={2} className={classes.box}>
       <Box display="flex" >
         <Box flexGrow={1} >

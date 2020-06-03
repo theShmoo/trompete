@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 
 import withRoot from './withRoot';
@@ -13,17 +13,20 @@ import PostForm from './postForm';
 import Feed from './feed';
 
 const styles = theme => ({
+  flex: {
+    flexGrow: 1,
+  },
   root: {
     flexGrow: 1,
   },
   main: {
     padding: theme.spacing(2),
-    margin: theme.spacing(1),
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
-  ui: {
+  description: {
     padding: theme.spacing(2),
-    margin: theme.spacing(1),
-  },
+  }
 });
 
 const TrompeteIcon = () => { return <span role="img" aria-label="trompete" style={{ margin: "1ex" }}>🎺</span>; };
@@ -45,23 +48,20 @@ class App extends Component {
       <AppBar position="static">
         <Toolbar>
           <TrompeteIcon />
-          <Typography variant="h5" color="inherit" className={classes.flex}>
+          <Typography variant="h5" className={classes.flex}>
             Trompete
           </Typography>
         </Toolbar>
       </AppBar>
-      <Paper square elevation={4} className={classes.ui}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <PostForm user={user} onSend={handleSend} />
-          </Grid>
-        </Grid>
-      </Paper>
-      <Grid container spacing={2} className={classes.main}>
-        <Grid item xs={12}>
-          <Feed user={user} refresh={this.state.refreshFeed} />
-        </Grid>
-      </Grid>
+      <Container spacing={2} fixed={true} maxWidth={1200} className={classes.main}>
+        <Paper square elevation={4} >
+          <Typography variant="body1" className={classes.description}>
+            Trompete eine Nachricht an alle Pfadfinder!
+          </Typography>
+          <PostForm user={user} onSend={handleSend} />
+        </Paper>
+        <Feed user={user} refresh={this.state.refreshFeed} />
+      </Container>
     </div >
   }
 }
