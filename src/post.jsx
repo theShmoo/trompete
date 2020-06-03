@@ -6,9 +6,12 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import TimeAgo from 'react-timeago'
+import germanStrings from 'react-timeago/lib/language-strings/de'
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 
 import Vote from './vote';
 
+const formatter = buildFormatter(germanStrings);
 
 const styles = theme => ({
   root: {
@@ -23,7 +26,7 @@ const styles = theme => ({
 const Ago = (props) => {
   return <Grid xs={12}>
     <Typography variant="caption" color="inherit">
-      <TimeAgo date={props.time} />
+      <TimeAgo date={props.time} formatter={formatter} />
     </Typography>
   </Grid>
 }
