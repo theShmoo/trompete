@@ -44,21 +44,12 @@ const Votes = (props) => {
   const votesBase = PostsBase + '/' + id + '/votes';
 
 
-  const initialVote = (up) => {
+  const initialVote = (data, up) => {
     const url = votesBase + '.json';
-    const data = {
-      'user': user,
-      'up': up,
-      'time': Date.now()
-    }
     const msg = {
       method: 'POST',
       headers: PostHeaderOptions,
-      body: JSON.stringify({
-        'user': user,
-        'up': up,
-        'time': Date.now()
-      }),
+      body: JSON.stringify(data),
       redirect: 'follow'
     };
     fetch(url, msg)
@@ -80,27 +71,18 @@ const Votes = (props) => {
       });
   }
 
-  const updateVote = (up) => {
+  const updateVote = (data, up) => {
     const url = votesBase + '/' + vote.id + '/.json';
     const msg = {
       method: 'PATCH',
       headers: PostHeaderOptions,
-      body: JSON.stringify({
-        'up': up,
-        'time': Date.now()
-      }),
+      body: JSON.stringify(data),
       redirect: 'follow'
     };
     fetch(url, msg)
       .then((response) => {
         if (response.ok) {
-          response.json().then((json) => {
-            // deep copy
-            const cVote = JSON.parse(JSON.stringify(vote))
-            cVote.data.up = json.up;
-            cVote.data.time = json.time;
-            setVote(cVote);
-          });
+          // good
         }
         else {
           throw new Error("Whoops!");
@@ -113,10 +95,24 @@ const Votes = (props) => {
 
   const handleVote = (up) => {
     if (vote) {
-      updateVote(up);
+      // if the vote does not have an id yet we just ignore it
+      // also we ignore it if the vote has the same up state
+      if (vote.id && vote.data.up !== up) {
+        const cVote = JSON.parse(JSON.stringify(vote))
+        cVote.data.up = up;
+        cVote.data.time = Date.now();
+        setVote(cVote);
+        updateVote(cVote.data, up);
+      }
     }
     else {
-      initialVote(up);
+      const data = {
+        'user': user,
+        'up': up,
+        'time': Date.now()
+      }
+      setVote({ data: data });
+      initialVote(data, up);
     }
   };
 
@@ -135,8 +131,13 @@ const Votes = (props) => {
     upcolor = up ? "primary" : "inherit";
     downcolor = !up ? "primary" : "inherit";
     // correct the voting by the local state
-    if (foundVote && foundVote.data.up !== up) {
-      voteSum += up ? 2 : -2;
+    if (foundVote) {
+      if (foundVote.data.up !== up) {
+        voteSum += up ? 2 : -2;
+      }
+    }
+    else {
+      voteSum += up ? 1 : -1;
     }
   }
 
