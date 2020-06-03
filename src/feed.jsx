@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import Post from './post';
-import { Posts, GetRequestOptions } from './endpoints';
+import { PostsURL, GetRequestOptions } from './endpoints';
 
 const styles = theme => ({
   root: {
@@ -14,7 +14,12 @@ const styles = theme => ({
 
 class Feed extends React.Component {
   state = {
-    data: {}
+    data: {},
+    error: ""
+  }
+
+  setData(data) {
+    this.setState({ data: data });
   }
 
   componentDidMount(prevProps) {
@@ -29,17 +34,17 @@ class Feed extends React.Component {
 
   update() {
     // const { user } = this.props;
-    fetch(Posts, GetRequestOptions).then(response => response.json())
+    fetch(PostsURL, GetRequestOptions).then(response => response.json())
       .then(json => {
-        this.setState({ data: json })
+        this.setData(json);
       });
   }
 
   render() {
-    const { classes } = this.props;
+    const { user, classes } = this.props;
     const PostTexts = Object.entries(this.state.data).map(
       ([k, v], i) => {
-        return <Post post={v} key={i} />
+        return <Post id={k} post={v} user={user} onVote={this.handleVote} key={i} />
       });
 
     return <Grid className={classes.root} container spacing={2}>

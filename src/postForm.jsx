@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -9,22 +8,18 @@ import Typography from '@material-ui/core/Typography';
 import SendIcon from '@material-ui/icons/Send';
 import DoneIcon from '@material-ui/icons/Done';
 
-import { Posts } from './endpoints';
+import { PostsURL, PostHeaderOptions } from './endpoints';
 
 const styles = theme => ({
   form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    flexGrow: 1,
   },
   button: {
     margin: theme.spacing(1),
   },
   textField: {
-    margin: theme.spacing(2),
+    flexGrow: 1,
+    padding: theme.spacing(2),
   },
 });
 
@@ -44,21 +39,18 @@ const PostForm = (props) => {
 
     const msg = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      headers: PostHeaderOptions,
       body: JSON.stringify({
         'user': user,
-        'text': text
+        'text': text,
+        'time': Date.now()
       }),
       redirect: 'follow'
     };
-    fetch(Posts, msg)
+    fetch(PostsURL, msg)
       .then((response) => {
         if (response.ok) {
           response.json().then((json) => {
-            console.log(json);
             setDone(true);
             wrappedOnSend();
           }).catch(() => {
@@ -81,41 +73,33 @@ const PostForm = (props) => {
     setError(event.target.value ? "" : "Leere Trompete");
   };
 
-  return <form className={classes.form} autoComplete="off">
-    <FormControl className={classes.formControl}>
-      <TextField
-        id="my-text"
-        multiline
-        error={hasError}
-        margin="normal"
-        className={classes.textField}
-        rowsMax={4}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        fullWidth
-        value={text}
-        onKeyPress={(ev) => {
-          if (ev.key === 'Enter') {
-            handleSend();
-            ev.preventDefault();
-          }
-        }}
-        onChange={handleChange}
-      />
-    </FormControl>
-    <FormControl className={classes.formControl}>
-      <Button
-        variant="contained"
-        disabled={done || hasError}
-        onClick={handleSend}
-        className={classes.button}
-        color={done ? "secondary" : "primary"}
-        endIcon={done ? <DoneIcon /> : <SendIcon />}>
-        Send
-            </Button>
-      {done ? <Typography variant="body1" color="primary">Danke!</Typography> : ""}
-    </FormControl>
+  return <form className={classes.form}>
+    <TextField
+      id="my-text"
+      multiline
+      error={hasError}
+      className={classes.textField}
+      rowsMax={4}
+      fullWidth
+      value={text}
+      onKeyPress={(ev) => {
+        if (ev.key === 'Enter') {
+          handleSend();
+          ev.preventDefault();
+        }
+      }}
+      onChange={handleChange}
+    />
+    <Button
+      variant="contained"
+      disabled={done || hasError}
+      onClick={handleSend}
+      className={classes.button}
+      color={done ? "secondary" : "primary"}
+      endIcon={done ? <DoneIcon /> : <SendIcon />}>
+      Send
+          </Button>
+    {done ? <Typography variant="body1" color="primary">Danke!</Typography> : ""}
   </form>
 };
 

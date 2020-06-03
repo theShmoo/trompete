@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// material-ui
+
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,7 +28,7 @@ const styles = theme => ({
 
 const TrompeteIcon = () => { return <span role="img" aria-label="trompete" style={{ margin: "1ex" }}>🎺</span>; };
 
-const user = 'databases/users/M8qkGNG5pSfIyxBcxPP';
+const user = '-M8qkGNG5pSfIyxBcxPP';
 
 class App extends Component {
 
@@ -62,7 +62,7 @@ class App extends Component {
           <Feed user={user} refresh={this.state.refreshFeed} />
         </Grid>
       </Grid>
-    </div>
+    </div >
   }
 }
 
